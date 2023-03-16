@@ -51,9 +51,27 @@ class SpotifyAPIClient(object):
         for key, value in params.items():
             concat_url += f'&{key}={value}'
         return concat_url
+    
+    def get_available_genres(self): 
+        bearer_token = self.get_bearer_token()
+        genres_endpoint = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
+        all_genres = []
 
-    def get_reccomended_songs(self, limit=5, seed_artists='', seed_tracks='', market="US",
-                              seed_genres="rock", target_danceability=0.1): 
+        genres_req_headers = {"Content-type": "application/json", "Authorization": f"Bearer {bearer_token}"}
+
+        response = requests.get(genres_endpoint, headers=genres_req_headers)
+
+        if response:
+            print("Available Genres:")
+            json_response = response.json()
+            print(json_response)
+        else:
+            raise Exception("Failed to call available genre seeds endpoint", response)
+
+
+
+    def get_reccomended_songs(self, limit=5, seed_artists='', seed_tracks='0c6xIDDpzE81m2q797ordA', market="US",
+                              seed_genres='', target_danceability=0.1): 
         bearer_token = self.get_bearer_token()
         recs_endpoint = "https://api.spotify.com/v1/recommendations?"
         all_recs = []
@@ -76,9 +94,10 @@ class SpotifyAPIClient(object):
                 all_recs.append(reccs)
             return all_recs
         else:
-            raise Exception("Recommendation Request Failed.")
+            raise Exception("Failed to call song recommendation endpoint", response)
 
 
-# Demo 
+# Testing 
 client = SpotifyAPIClient(client_id=client_id, client_secret=client_secret, redirect_url=redirect_url)
+# client.get_available_genres()
 client.get_reccomended_songs()
