@@ -114,7 +114,8 @@ class SpotifyAPIClient(object):
             print(f'{search_results[-1].name} by {search_results[-1].artists[0].name}')
         return search_results
     
-    def combiner(self, search_spotify_track, get_reccomended_tracks):
+    def combiner(self):
+        return self.get_reccomended_tracks(), self.search_spotify_track()
         
 
 # Testing 
